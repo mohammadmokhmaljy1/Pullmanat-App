@@ -2,8 +2,9 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
+  /// عنوان الخادم — يجب أن يطابق baseUrl في postman_collections.json
   static const String baseUrl =
-      'https://wheat-magpie-215255.hostingersite.com/api/v1';
+      'https://wheat-magpie-215255.hostingersite.com';
 
   static const String userLogin = '/users/login.php';
   static const String userCreate = '/users/create.php';

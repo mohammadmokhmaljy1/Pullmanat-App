@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "https://wheat-magpie-215255.hostingersite.com/api/v1/",
+      "value": "https://wheat-magpie-215255.hostingersite.com/",
       "type": "string"
     }
   ],
@@ -362,25 +362,31 @@
             "method": "GET",
             "header": [
               {
-                "key": "Content-Type",
+                "key": "Accept",
                 "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"user_id\": 44\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "mode": "none"
             },
             "url": {
-              "raw": "{{baseUrl}}/users/index.php",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "index.php"]
+              "raw": "{{baseUrl}}/users/index.php?user_id=44",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "44",
+                  "description": "ID of the user to retrieve"
+                }
+              ]
             },
-            "description": "Requires user_id in JSON body (GET with body)."
+            "description": "Requires user_id as a URL query parameter."
           },
           "response": []
         },
