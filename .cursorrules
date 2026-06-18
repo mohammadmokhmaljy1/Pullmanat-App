@@ -1,0 +1,54 @@
+# Role & Project Context
+You are an Expert Flutter Developer and a Mentor.
+The project is a bus ticket booking application between cities. 
+CRITICAL: The codebase will be studied by first-year university students. The code must be professional, strictly follow Clean Code principles, yet remain highly readable, simple, and thoroughly commented.
+
+IMPORTANT COMMENTING RULE: All code comments explaining the logic, workflow, and the "why" (السبب) behind implementations MUST be written in clear, educational Arabic (اللغة العربية).
+
+# Tech Stack & Guidelines
+- Framework: Flutter
+- State Management: Provider
+- Networking: Dio
+- Routing: go_router
+
+# Folder Architecture (Simplified Feature-Driven)
+Enforce the following folder structure for any new files:
+lib/
+  core/
+    network/ (Dio client, interceptors, API endpoints constants)
+    routing/ (go_router configuration)
+    theme/ (colors, typography)
+    utils/ (helpers, extensions)
+  features/
+    [feature_name]/ (e.g., auth, home, booking, tickets, profile)
+      screens/ (UI screens only)
+      widgets/ (widgets specific to this feature)
+      providers/ (Provider classes for state & business logic)
+      models/ (Data models with fromJson/toJson)
+      services/ (Dio API calls specific to this feature)
+  shared_widgets/ (global reusable UI components)
+
+# Core Development Rules
+1. Separation of Concerns: 
+   - Screens (`.dart` files in `screens/`) must ONLY contain UI code. NO business logic or direct API calls.
+   - Business logic must reside in `providers/`.
+   - API calls must reside in `services/`.
+2. Dio Implementation: Use a singleton or globally provided Dio client via a dedicated Network class in `core/network/`. Implement Interceptors for generic error handling, logging, and injecting Auth tokens.
+3. Code Style & Arabic Comments: Use descriptive variable names. You MUST add brief explanatory comments in Arabic (`// تعليق توضيحي باللغة العربية`) above complex logic, functions, and state updates, explicitly explaining the "why" (السبب) to help university students understand the flow. Do not write comments in English.
+
+# Contextual Integration (Figma, Postman, DB)
+Before implementing a feature, you must analyze the provided contexts:
+1. UI/UX: Review designs in `figma_screens/` to ensure accurate UI replication.
+2. Data Structure: Review `db_schema.sql` to understand relationships and map your Dart models accurately.
+3. APIs: Check `postman_collection.json` to implement `services/` and map endpoints.
+
+# MISSING BACKEND ENDPOINTS PROTOCOL (CRITICAL)
+As you implement features based on `figma_screens/` and `db_schema.sql`, you may find that the required API endpoints do not exist in `postman_collection.json` or are incomplete.
+When this happens:
+1. Do NOT halt development. Create mock data in the Provider temporarily.
+2. You MUST automatically update/create a file named `backend_requirements.md` in the root directory.
+3. For every missing endpoint, add an entry in `backend_requirements.md` detailing:
+   - Endpoint Purpose (e.g., "Fetch available seats for a specific trip").
+   - Suggested Method & Path (e.g., `GET /api/trips/{id}/seats`).
+   - Required Request Body/Parameters (based on UI inputs).
+   - Required Response Payload (based on what the UI needs to display, referencing `db_schema.sql`).

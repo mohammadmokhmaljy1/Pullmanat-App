@@ -1,0 +1,810 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Pullmanat Garage Management API",
+    "description": "Full API collection for the Pullmanat Garage Management backend.\n\n## Setup\n1. Import this file into Postman.\n2. Update the `baseUrl` collection variable to match your server (default: `http://localhost/back_end-pullmanat-garage-management`).\n3. All requests use `Content-Type: application/json` unless noted.\n\n## Notes\n- Some GET endpoints accept a JSON body (users, employees, trips search) — Postman supports this.\n- `reservations/index.php` and `employees/index.php` also accept query params as an alternative to the body.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://wheat-magpie-215255.hostingersite.com/api/v1/",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Company",
+      "item": [
+        {
+          "name": "List All Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/company/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["company", "index.php"]
+            },
+            "description": "Returns all companies from the database."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_name\": \"Pullmanat Transport\",\n  \"destinations\": \"Damascus, Homs, Aleppo\",\n  \"phone\": 933445566,\n  \"email\": \"info@pullmanat.com\",\n  \"registration_number\": 101010\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/company/add.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["company", "add.php"]
+            },
+            "description": "Required fields: company_name, destinations, phone, email, registration_number. Status defaults to 0 (inactive)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Company Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_id\": 10,\n  \"status\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/company/status.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["company", "status.php"]
+            },
+            "description": "Activate (1) or deactivate (0) a company. Required: company_id, status (0 or 1)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Departure Points",
+      "item": [
+        {
+          "name": "Add Departure Point",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"city_name\": \"Damascus\",\n  \"station_name\": \"Central Station\",\n  \"station_location\": \"City Center\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departure_points/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["departure_points", "index.php"]
+            },
+            "description": "Required fields: city_name, station_name, station_location."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Departure Point",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"station_id\": 1,\n  \"city_name\": \"Damascus\",\n  \"station_name\": \"Updated Station Name\",\n  \"station_location\": \"Updated Location\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departure_points/update.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["departure_points", "update.php"]
+            },
+            "description": "Required: station_id. Optional: city_name, station_name, station_location (unchanged fields keep their current values)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "Add Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employee_name\": \"Ahmed Ali\",\n  \"email\": \"ahmed.driver@pullmanat.com\",\n  \"job\": \"Driver\",\n  \"company\": \"Pullmanat\",\n  \"password\": \"password123\",\n  \"company_id\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/employees/add.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees", "add.php"]
+            },
+            "description": "Required: employee_name, email, job, company, password. Optional: company_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Employee Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ali@example.com\",\n  \"password\": \"your_password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/employees/login.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees", "login.php"]
+            },
+            "description": "Required: email, password. Employee must have status 'active'."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Employee by ID (Query Param)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/employees/index.php?employee_id=8",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees", "index.php"],
+              "query": [
+                {
+                  "key": "employee_id",
+                  "value": "8",
+                  "description": "Employee ID"
+                }
+              ]
+            },
+            "description": "Get employee details by ID. Accepts employee_id as query param or JSON body."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Employee by ID (JSON Body)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employee_id\": 8\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/employees/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees", "index.php"]
+            },
+            "description": "Alternative: pass employee_id in JSON body."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Employee Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employee_id\": 8,\n  \"employee_status\": \"inactive\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/employees/status.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees", "status.php"]
+            },
+            "description": "Required: employee_id, employee_status ('active' or 'inactive')."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"phone\": 912345678,\n  \"password\": \"password123\",\n  \"image\": \"profile.png\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/create.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "create.php"]
+            },
+            "description": "Required: name, email, phone, password. Optional: image."
+          },
+          "response": []
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"safejo4396@fanchatu.com\",\n  \"password\": \"your_password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/login.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "login.php"]
+            },
+            "description": "Required: email, password."
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 44\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "index.php"]
+            },
+            "description": "Requires user_id in JSON body (GET with body)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 44,\n  \"name\": \"Updated Name\",\n  \"phone\": 912345678,\n  \"image\": \"new_profile.png\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/update.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "update.php"]
+            },
+            "description": "Required: user_id. Optional (at least one): name, phone, image."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Trips",
+      "item": [
+        {
+          "name": "View All Trips",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/trips/view.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["trips", "view.php"]
+            },
+            "description": "Returns all trips."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Trips",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"departure_city\": \"Damascus\",\n  \"destination_city\": \"Homs\",\n  \"trip_date\": \"2026-05-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/trips/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["trips", "index.php"]
+            },
+            "description": "Search trips by departure_city, destination_city, and trip_date. Note: this is a GET request with a JSON body."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Trip",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"departure_city\": \"Damascus\",\n  \"destination_city\": \"Homs\",\n  \"trip_date\": \"2026-06-20\",\n  \"trip_time\": \"14:30:00\",\n  \"trip_price\": 15000,\n  \"bus_namber\": 5,\n  \"point_id\": 1,\n  \"company_id\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/trips/add.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["trips", "add.php"]
+            },
+            "description": "Required: departure_city, destination_city, trip_date, trip_time, trip_price, bus_namber. Optional: point_id, company_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Trip",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trip_id\": 18,\n  \"departure_city\": \"Aleppo\",\n  \"destination_city\": \"Latakia\",\n  \"trip_date\": \"2026-06-10\",\n  \"trip_time\": \"09:45:00\",\n  \"trip_price\": 18000,\n  \"bus_namber\": 2,\n  \"point_id\": null,\n  \"company_id\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/trips/update.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["trips", "update.php"]
+            },
+            "description": "Required: trip_id, departure_city, destination_city, trip_date, trip_time, trip_price, bus_namber. Optional: point_id, company_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Trip",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trip_id\": 18\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/trips/delete.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["trips", "delete.php"]
+            },
+            "description": "Required: trip_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "View All Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/view.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "view.php"]
+            },
+            "description": "Returns all reservations."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reservations by User (Query Param)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/index.php?user_id=44",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "index.php"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "44",
+                  "description": "User ID"
+                }
+              ]
+            },
+            "description": "Get all reservations for a user. Accepts user_id as query param or JSON body."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reservations by User (JSON Body)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 44\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "index.php"]
+            },
+            "description": "Alternative: pass user_id in JSON body."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 44,\n  \"trip_id\": 7,\n  \"res_time\": \"10:00:00\",\n  \"res_status\": \"active\",\n  \"seat\": 1,\n  \"national_id\": 123456789,\n  \"nods\": \"Window seat preferred\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations/add.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "add.php"]
+            },
+            "description": "Required: user_id, trip_id, res_time, res_status, national_id, nods. Optional: seat."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Reservation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"res_id\": 21,\n  \"user_id\": 44,\n  \"trip_id\": 7,\n  \"res_time\": \"10:00:00\",\n  \"res_status\": \"active\",\n  \"seat\": 2,\n  \"national_id\": 123456789,\n  \"nods\": \"Updated notes\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations/update.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "update.php"]
+            },
+            "description": "Required: res_id, user_id, trip_id, res_time, res_status, national_id, nods. Optional: seat."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Reservation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"res_id\": 21\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations/status.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "status.php"]
+            },
+            "description": "Cancels a reservation (sets res_status to 'canceled'). Required: res_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"res_id\": 21,\n  \"payment_method\": \"cash\",\n  \"amount_paid\": 15000,\n  \"payment_date\": \"2026-06-18\",\n  \"payment_status\": \"paid\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "index.php"]
+            },
+            "description": "Required: res_id, payment_method, amount_paid. Optional: payment_date (defaults to today), payment_status (defaults to 'paid')."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Special Requests",
+      "item": [
+        {
+          "name": "Create Special Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"departure_point\": \"Damascus\",\n  \"arrival_point\": \"Aleppo\",\n  \"time\": \"14:30:00\",\n  \"date\": \"2026-06-20\",\n  \"notes\": \"VIP seat requested\",\n  \"user_id\": 44\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/special_requests/index.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["special_requests", "index.php"]
+            },
+            "description": "Required: departure_point, arrival_point. Optional: time, date, notes, user_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Special Request",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request_id\": 8\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/special_requests/cancel.php",
+              "host": ["{{baseUrl}}"],
+              "path": ["special_requests", "cancel.php"]
+            },
+            "description": "Deletes a special request. Required: request_id."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
