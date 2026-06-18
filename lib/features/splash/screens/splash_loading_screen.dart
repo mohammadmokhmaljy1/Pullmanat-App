@@ -33,9 +33,9 @@ class _SplashLoadingScreenState extends State<SplashLoadingScreen> {
 
     if (!mounted) return;
 
-    // بعد اكتمال التهيئة ننتقل للصفحة الرئيسية (مؤقتة حتى بناء باقي الشاشات)
+    // بعد اكتمال التهيئة ننتقل لشاشات التعريف
     if (splashProvider.isInitialized) {
-      context.go(AppRoutes.home);
+      context.go(AppRoutes.gettingStarted);
     }
   }
 

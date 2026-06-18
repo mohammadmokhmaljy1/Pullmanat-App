@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/providers/auth_provider.dart';
+import 'features/onboarding/providers/onboarding_provider.dart';
 import 'features/splash/providers/splash_provider.dart';
 
 void main() {
@@ -18,8 +20,9 @@ class PullmanatApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // مزود شاشة البداية — يُستخدم لإدارة منطق الانتقال والتهيئة
         ChangeNotifierProvider(create: (_) => SplashProvider()),
+        ChangeNotifierProvider(create: (_) => OnboardingProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp.router(
         title: 'بين المدن',
