@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../../../core/network/api_endpoints.dart';
 import '../../../core/network/api_exception.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/utils/error_message_translator.dart';
 import '../models/user_model.dart';
 
 /// طبقة الخدمة — كل طلبات المصادقة عبر Dio
@@ -77,7 +78,11 @@ class AuthService {
       return UserModel.fromJson(map);
     }
 
-    throw ApiException(map['message']?.toString() ?? 'فشلت العملية');
+    throw ApiException(
+      ErrorMessageTranslator.translate(
+        map['message']?.toString() ?? 'فشلت العملية',
+      ),
+    );
   }
 
   /// تحويل رقم الهاتف لصيغة رقمية كما يتوقعها الـ API

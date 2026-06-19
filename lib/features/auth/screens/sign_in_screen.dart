@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
+import '../../../shared_widgets/coming_soon_dialog.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_divider.dart';
 import '../widgets/auth_google_button.dart';
@@ -26,12 +25,6 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setSystemUIOverlayStyle(AppTheme.splashOverlayStyle);
-  }
 
   @override
   void dispose() {
@@ -67,10 +60,14 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _showComingSoon() {
+  void _showForgotPasswordComingSoon() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('هذه الميزة ستتوفر قريباً')),
     );
+  }
+
+  void _showGoogleComingSoon() {
+    ComingSoonDialog.show(context);
   }
 
   @override
@@ -124,6 +121,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     controller: _identifierController,
                     hintText: 'ahmad@gmail.com',
                     keyboardType: TextInputType.emailAddress,
+                    inputTextDirection: TextDirection.ltr,
                     validator: Validators.loginIdentifier,
                   ),
                   AuthTextField(
@@ -131,12 +129,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     controller: _passwordController,
                     obscureText: true,
                     showVisibilityToggle: true,
+                    inputTextDirection: TextDirection.ltr,
                     validator: Validators.password,
                   ),
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: AlignmentDirectional.centerStart,
                     child: TextButton(
-                      onPressed: _showComingSoon,
+                      onPressed: _showForgotPasswordComingSoon,
                       child: const DecoratedBox(
                         decoration: BoxDecoration(
                           border: Border(
@@ -163,7 +162,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     onPressed: _handleLogin,
                   ),
                   const AuthDivider(),
-                  AuthGoogleButton(onPressed: _showComingSoon),
+                  AuthGoogleButton(onPressed: _showGoogleComingSoon),
                   const SizedBox(height: 24),
                   Center(
                     child: GestureDetector(

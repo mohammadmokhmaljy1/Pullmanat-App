@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
 import '../providers/onboarding_provider.dart';
 import '../widgets/onboarding_bottom_bar.dart';
 import '../widgets/onboarding_page_content.dart';
@@ -26,7 +24,6 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    SystemChrome.setSystemUIOverlayStyle(AppTheme.splashOverlayStyle);
   }
 
   @override

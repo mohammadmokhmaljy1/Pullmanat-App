@@ -2,8 +2,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/screens/sign_in_screen.dart';
 import '../../features/auth/screens/sign_up_screen.dart';
-import '../../features/home/screens/home_placeholder_screen.dart';
+import '../../features/home/screens/home_screen.dart';
 import '../../features/onboarding/screens/getting_started_screen.dart';
+import '../../features/search/screens/flight_list_screen.dart';
+import '../../features/search/screens/search_screen.dart';
 import '../../features/splash/screens/splash_loading_screen.dart';
 import '../../features/splash/screens/splash_screen.dart';
 import 'app_routes.dart';
@@ -37,7 +39,15 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) => const HomePlaceholderScreen(),
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.search,
+        builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.flightList,
+        builder: (context, state) => const FlightListScreen(),
       ),
     ],
   );

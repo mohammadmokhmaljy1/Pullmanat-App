@@ -8,4 +8,6 @@ class AppRoutes {
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
   static const String home = '/home';
+  static const String search = '/search';
+  static const String flightList = '/flight-list';
 }

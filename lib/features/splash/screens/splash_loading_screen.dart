@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
 import '../providers/splash_provider.dart';
 import '../widgets/splash_loading_indicator.dart';
 import '../widgets/splash_logo.dart';
@@ -22,7 +20,6 @@ class _SplashLoadingScreenState extends State<SplashLoadingScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(AppTheme.splashOverlayStyle);
     _startInitialization();
   }
 

@@ -45,4 +45,19 @@ class AppColors {
 
   /// لون الرابط التفاعلي
   static const Color authLink = Color(0xFF8AB4C7);
+
+  /// لون خلفية الشاشة الرئيسية
+  static const Color homeBackground = Color(0xFFF4F4F0);
+
+  /// لون خلفية شريط البحث وبطاقات الفئات
+  static const Color homeSurface = Color(0xFFE6EBEF);
+
+  /// لون النص الثانوي في الشاشة الرئيسية
+  static const Color homeTextSecondary = Color(0xFF5A6B75);
+
+  /// لون زر التفاصيل البرتقالي
+  static const Color homeDetailsButton = Color(0xFFF5A623);
+
+  /// لون شريط التنقل السفلي
+  static const Color homeNavBar = Color(0xFF1E3A4C);
 }

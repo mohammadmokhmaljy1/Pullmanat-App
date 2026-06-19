@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../utils/error_message_translator.dart';
 import 'api_endpoints.dart';
 import 'api_exception.dart';
 
@@ -33,7 +34,20 @@ class DioClient {
       final data = response.data as Map;
       final message = data['message'] ?? data['error'] ?? data['msg'];
       if (message != null) {
-        return ApiException(message.toString(), statusCode: response.statusCode);
+        return ApiException(
+          ErrorMessageTranslator.translate(
+            message.toString(),
+            statusCode: response.statusCode,
+          ),
+          statusCode: response.statusCode,
+        );
+      }
+    }
+
+    if (response != null) {
+      final statusMessage = ErrorMessageTranslator.fromStatusCode(response.statusCode);
+      if (statusMessage != null) {
+        return ApiException(statusMessage, statusCode: response.statusCode);
       }
     }
 

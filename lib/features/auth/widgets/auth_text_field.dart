@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import 'auth_field_label_row.dart';
 
-/// حقل إدخال موحّد لشاشات تسجيل الدخول وإنشاء الحساب
+/// حقل إدخال موحّد لشاشات تسجيل الدخول وإنشاء الحساب — بتخطيط RTL
 class AuthTextField extends StatefulWidget {
   const AuthTextField({
     super.key,
@@ -15,6 +15,8 @@ class AuthTextField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.showVisibilityToggle = false,
+    // اتجاه النص داخل الحقل — LTR للبريد والهاتف، RTL للعربية
+    this.inputTextDirection = TextDirection.rtl,
   });
 
   final String label;
@@ -25,6 +27,7 @@ class AuthTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
   final bool showVisibilityToggle;
+  final TextDirection inputTextDirection;
 
   @override
   State<AuthTextField> createState() => _AuthTextFieldState();
@@ -51,76 +54,83 @@ class _AuthTextFieldState extends State<AuthTextField> {
   Widget build(BuildContext context) {
     final hasError = _errorText != null;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        AuthFieldLabelRow(
-          label: widget.label,
-          errorText: _errorText,
-        ),
-        TextFormField(
-          controller: widget.controller,
-          keyboardType: widget.keyboardType,
-          obscureText: widget.obscureText && _obscured,
-          validator: _validate,
-          textDirection: TextDirection.ltr,
-          textAlign: TextAlign.left,
-          onChanged: (value) {
-            if (_errorText != null) {
-              setState(() => _errorText = widget.validator?.call(value));
-            }
-            widget.onChanged?.call(value);
-          },
-          style: const TextStyle(
-            color: AppColors.authInputText,
-            fontSize: 15,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AuthFieldLabelRow(
+            label: widget.label,
+            errorText: _errorText,
           ),
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            hintStyle: TextStyle(
-              color: AppColors.authInputText.withValues(alpha: 0.7),
+          TextFormField(
+            controller: widget.controller,
+            keyboardType: widget.keyboardType,
+            obscureText: widget.obscureText && _obscured,
+            validator: _validate,
+            textDirection: widget.inputTextDirection,
+            textAlign: TextAlign.right,
+            onChanged: (value) {
+              if (_errorText != null) {
+                setState(() => _errorText = widget.validator?.call(value));
+              }
+              widget.onChanged?.call(value);
+            },
+            style: const TextStyle(
+              color: AppColors.authInputText,
+              fontSize: 15,
             ),
-            filled: true,
-            fillColor: AppColors.authInputBackground,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.authError : Colors.transparent,
-                width: 1.5,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              hintTextDirection: widget.inputTextDirection,
+              hintStyle: TextStyle(
+                color: AppColors.authInputText.withValues(alpha: 0.7),
               ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.authError : AppColors.brandLightBlue,
-                width: 1.5,
+              filled: true,
+              fillColor: AppColors.authInputBackground,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
               ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: hasError ? AppColors.authError : Colors.transparent,
+                  width: 1.5,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: hasError ? AppColors.authError : AppColors.brandLightBlue,
+                  width: 1.5,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: AppColors.authError, width: 1.5),
+              ),
+              // في RTL يظهر suffixIcon على اليسار — مطابق لتصميم Figma
+              suffixIcon: widget.showVisibilityToggle
+                  ? IconButton(
+                      onPressed: () => setState(() => _obscured = !_obscured),
+                      icon: Icon(
+                        _obscured
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: AppColors.brandLightBlue,
+                      ),
+                    )
+                  : null,
             ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.authError, width: 1.5),
-            ),
-            prefixIcon: widget.showVisibilityToggle
-                ? IconButton(
-                    onPressed: () => setState(() => _obscured = !_obscured),
-                    icon: Icon(
-                      _obscured ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      color: AppColors.brandLightBlue,
-                    ),
-                  )
-                : null,
           ),
-        ),
-        const SizedBox(height: 16),
-      ],
+          const SizedBox(height: 16),
+        ],
+      ),
     );
   }
 }

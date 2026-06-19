@@ -9,4 +9,8 @@ class ApiEndpoints {
   static const String userLogin = '/users/login.php';
   static const String userCreate = '/users/create.php';
   static const String userProfile = '/users/index.php';
+
+  static const String tripsView = '/trips/view.php';
+  static const String tripsSearch = '/trips/index.php';
+  static const String departurePoints = '/departure_points/index.php';
 }

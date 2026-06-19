@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
+import '../../../shared_widgets/coming_soon_dialog.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_divider.dart';
 import '../widgets/auth_google_button.dart';
@@ -30,12 +29,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordController = TextEditingController();
 
   bool _acceptedTerms = false;
-
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setSystemUIOverlayStyle(AppTheme.splashOverlayStyle);
-  }
 
   @override
   void dispose() {
@@ -88,10 +81,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _showComingSoon() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('هذه الميزة ستتوفر قريباً')),
-    );
+  void _showGoogleComingSoon() {
+    ComingSoonDialog.show(context);
   }
 
   /// إعادة بناء الشاشة عند تغيير أي حقل لتحديث حالة الزر
@@ -141,6 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _emailController,
                     hintText: 'ahmad@gmail.com',
                     keyboardType: TextInputType.emailAddress,
+                    inputTextDirection: TextDirection.ltr,
                     validator: Validators.email,
                     onChanged: _onFieldChanged,
                   ),
@@ -149,6 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _phoneController,
                     hintText: '+963 987 654 321',
                     keyboardType: TextInputType.phone,
+                    inputTextDirection: TextDirection.ltr,
                     validator: Validators.phone,
                     onChanged: _onFieldChanged,
                   ),
@@ -157,6 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _passwordController,
                     obscureText: true,
                     showVisibilityToggle: true,
+                    inputTextDirection: TextDirection.ltr,
                     validator: Validators.password,
                     onChanged: _onFieldChanged,
                   ),
@@ -190,7 +184,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: _handleRegister,
                   ),
                   const AuthDivider(),
-                  AuthGoogleButton(onPressed: _showComingSoon),
+                  AuthGoogleButton(onPressed: _showGoogleComingSoon),
                   const SizedBox(height: 24),
                   Center(
                     child: GestureDetector(

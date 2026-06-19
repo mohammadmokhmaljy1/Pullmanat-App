@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 
-/// صف العنوان ورسالة الخطأ — العنوان يمين والخطأ يسار كما في Figma
+/// صف العنوان ورسالة الخطأ — ترتيب RTL: العنوان يمين والخطأ يسار
 class AuthFieldLabelRow extends StatelessWidget {
   const AuthFieldLabelRow({
     super.key,
@@ -15,34 +15,38 @@ class AuthFieldLabelRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          if (errorText != null)
-            Expanded(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
               child: Text(
-                errorText!,
+                label,
+                textAlign: TextAlign.right,
                 style: const TextStyle(
-                  color: AppColors.authError,
-                  fontSize: 13,
+                  color: AppColors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
-                textAlign: TextAlign.left,
               ),
-            )
-          else
-            const Spacer(),
-          Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
             ),
-            textAlign: TextAlign.right,
-          ),
-        ],
+            if (errorText != null)
+              Flexible(
+                child: Text(
+                  errorText!,
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                    color: AppColors.authError,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

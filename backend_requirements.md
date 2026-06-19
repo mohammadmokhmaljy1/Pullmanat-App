@@ -97,3 +97,24 @@
     }
   }
   ```
+
+---
+
+## 5. قائمة نقاط الانطلاق (Departure Points List)
+
+- **الغرض:** شاشة البحث تحتاج جلب نقاط الانطلاق حسب المدينة، لكن Postman يوثّق فقط POST/PUT على `departure_points/`.
+- **الطريقة والمسار المقترح:** `GET /departure_points/view.php` أو `GET /departure_points/index.php?city_name=حلب`
+- **Response Payload:**
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "station_id": 1,
+        "city_name": "Aleppo",
+        "station_name": "كراج الراموسة",
+        "station_location": "City Center"
+      }
+    ]
+  }
+  ```

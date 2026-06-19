@@ -8,6 +8,15 @@ import 'app_colors.dart';
 class AppTheme {
   AppTheme._();
 
+  /// تنسيق شريط الحالة — أيقونات سوداء على جميع الشاشات
+  static const SystemUiOverlayStyle statusBarStyle = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.light,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.dark,
+  );
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -20,17 +29,9 @@ class AppTheme {
       textTheme: GoogleFonts.cairoTextTheme(
         ThemeData.dark().textTheme,
       ),
-    );
-  }
-
-  /// تنسيق شريط الحالة ليتناسب مع الخلفية الداكنة في شاشة البداية
-  static SystemUiOverlayStyle get splashOverlayStyle {
-    return const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
-      systemNavigationBarColor: AppColors.splashBackground,
-      systemNavigationBarIconBrightness: Brightness.light,
+      appBarTheme: const AppBarTheme(
+        systemOverlayStyle: statusBarStyle,
+      ),
     );
   }
 }
