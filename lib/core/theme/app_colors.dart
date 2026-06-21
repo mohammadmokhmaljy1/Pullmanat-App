@@ -60,4 +60,10 @@ class AppColors {
 
   /// لون شريط التنقل السفلي
   static const Color homeNavBar = Color(0xFF1E3A4C);
+
+  /// لون زر الحفظ في نافذة تعديل الملف الشخصي
+  static const Color profileSaveButton = Color(0xFF2E8B57);
+
+  /// لون شارة التحقق على صورة الملف الشخصي
+  static const Color profileVerifiedBadge = Color(0xFF43A047);
 }

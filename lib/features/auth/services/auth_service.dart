@@ -18,7 +18,6 @@ class AuthService {
     required String password,
   }) async {
     try {
-      // إذا كان المدخل بريداً نرسله في email، وإلا نرسل الهاتف في phone
       final Map<String, dynamic> body;
       if (identifier.contains('@')) {
         body = {'email': identifier.trim(), 'password': password};
@@ -60,35 +59,28 @@ class AuthService {
     }
   }
 
-  /// استخراج بيانات المستخدم من استجابة الـ API بمرونة
+  /// استخراج بيانات المستخدم من استجابة الـ API
   UserModel _parseUserResponse(dynamic data) {
-    if (data is! Map) {
-      throw ApiException('استجابة غير متوقعة من الخادم');
+    final user = UserModel.tryParseFromResponse(data);
+    if (user != null) return user;
+
+    if (data is Map) {
+      throw ApiException(
+        ErrorMessageTranslator.translate(
+          data['message']?.toString() ?? 'فشلت العملية',
+        ),
+      );
     }
 
-    final map = Map<String, dynamic>.from(data);
-
-    if (map.containsKey('user') && map['user'] is Map) {
-      return UserModel.fromJson(Map<String, dynamic>.from(map['user']));
-    }
-    if (map.containsKey('data') && map['data'] is Map) {
-      return UserModel.fromJson(Map<String, dynamic>.from(map['data']));
-    }
-    if (map.containsKey('user_id')) {
-      return UserModel.fromJson(map);
-    }
-
-    throw ApiException(
-      ErrorMessageTranslator.translate(
-        map['message']?.toString() ?? 'فشلت العملية',
-      ),
-    );
+    throw ApiException('استجابة غير متوقعة من الخادم');
   }
 
   /// تحويل رقم الهاتف لصيغة رقمية كما يتوقعها الـ API
   int _parsePhone(String phone) {
     final digits = phone.replaceAll(RegExp(r'\D'), '');
     final normalized = digits.startsWith('963') ? digits.substring(3) : digits;
-    return int.parse(normalized.startsWith('0') ? normalized.substring(1) : normalized);
+    return int.parse(
+      normalized.startsWith('0') ? normalized.substring(1) : normalized,
+    );
   }
 }

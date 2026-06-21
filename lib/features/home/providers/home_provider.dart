@@ -58,6 +58,7 @@ class HomeProvider extends ChangeNotifier {
 
   /// البحث عبر الـ API عند الحاجة (مدن محددة)
   Future<void> searchFromApi({
+    required int userId,
     String? departureCity,
     String? destinationCity,
     String? tripDate,
@@ -68,9 +69,10 @@ class HomeProvider extends ChangeNotifier {
 
     try {
       _allTrips = await _tripsService.searchTrips(
-        departureCity: departureCity,
-        destinationCity: destinationCity,
-        tripDate: tripDate,
+        userId: userId,
+        departureCity: departureCity ?? '',
+        destinationCity: destinationCity ?? '',
+        tripDate: tripDate ?? '',
       );
     } on ApiException catch (error) {
       _errorMessage = error.message;

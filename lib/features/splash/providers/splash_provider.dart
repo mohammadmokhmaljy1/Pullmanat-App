@@ -1,7 +1,15 @@
 import 'package:flutter/foundation.dart';
 
-/// مزود حالة شاشة البداية — يدير منطق الانتقال بين الشاشتين
+import '../../../core/routing/app_routes.dart';
+import '../../../core/storage/onboarding_storage.dart';
+
+/// مزود حالة شاشة البداية — يدير منطق الانتقال بعد التهيئة
 class SplashProvider extends ChangeNotifier {
+  SplashProvider({OnboardingStorage? onboardingStorage})
+      : _onboardingStorage = onboardingStorage ?? OnboardingStorage();
+
+  final OnboardingStorage _onboardingStorage;
+
   /// مدة عرض الشاشة الأولى (الثابتة) قبل الانتقال لشاشة التحميل
   static const Duration splashDisplayDuration = Duration(milliseconds: 1500);
 
@@ -21,20 +29,37 @@ class SplashProvider extends ChangeNotifier {
     await Future<void>.delayed(splashDisplayDuration);
   }
 
-  /// يُحاكي تهيئة التطبيق (فحص الجلسة، تحميل البيانات، إلخ)
-  Future<void> initializeApp() async {
-    if (_isInitializing || _isInitialized) return;
+  /// تهيئة التApp وتحديد الشاشة التالية حسب الجلسة وحالة التعريف
+  Future<String?> resolveStartupRoute({required bool isAuthenticated}) async {
+    if (_isInitializing) return null;
 
     _isInitializing = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      // محاكاة عمليات التهيئة حتى يتوفر الـ Backend
       await Future<void>.delayed(initializationDuration);
+
+      final onboardingCompleted = await _onboardingStorage.isCompleted();
+
+      // أولوية: جلسة صالحة → الرئيسية
+      if (isAuthenticated) {
+        _isInitialized = true;
+        return AppRoutes.home;
+      }
+
+      // أول تشغيل → شاشات التعريف
+      if (!onboardingCompleted) {
+        _isInitialized = true;
+        return AppRoutes.gettingStarted;
+      }
+
+      // عاد المستخدم بدون جلسة → تسجيل الدخول
       _isInitialized = true;
+      return AppRoutes.signIn;
     } catch (error) {
       _errorMessage = 'حدث خطأ أثناء تحميل التطبيق';
+      return null;
     } finally {
       _isInitializing = false;
       notifyListeners();

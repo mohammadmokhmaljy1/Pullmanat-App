@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../shared_widgets/app_bottom_nav_bar.dart';
 import '../../../shared_widgets/app_nav_tab.dart';
 import '../../../shared_widgets/coming_soon_dialog.dart';
+import '../../../shared_widgets/status_bar_region.dart';
 import '../providers/search_provider.dart';
 import '../widgets/flight_list_trip_card.dart';
 import '../widgets/search_screen_header.dart';
@@ -20,7 +21,8 @@ class FlightListScreen extends StatelessWidget {
 
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
+      child: StatusBarRegion.lightTop(
+        child: Scaffold(
         backgroundColor: AppColors.homeBackground,
         body: SafeArea(
           child: Column(
@@ -113,6 +115,7 @@ class FlightListScreen extends StatelessWidget {
         ),
         bottomNavigationBar: const AppBottomNavBar(
           activeTab: AppNavTab.search,
+        ),
         ),
       ),
     );

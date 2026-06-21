@@ -6,6 +6,7 @@ import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/validators.dart';
 import '../../../shared_widgets/coming_soon_dialog.dart';
+import '../../../shared_widgets/status_bar_region.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/auth_divider.dart';
 import '../widgets/auth_google_button.dart';
@@ -96,7 +97,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
+      child: StatusBarRegion.darkTop(
+        child: Scaffold(
         backgroundColor: AppColors.authBackground,
         body: SafeArea(
           child: SingleChildScrollView(
@@ -215,6 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

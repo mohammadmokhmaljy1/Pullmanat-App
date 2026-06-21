@@ -30,8 +30,9 @@ class AppBottomNavBar extends StatelessWidget {
         context.go(AppRoutes.home);
       case AppNavTab.search:
         context.go(AppRoutes.search);
-      case AppNavTab.bookings:
       case AppNavTab.profile:
+        context.go(AppRoutes.profile);
+      case AppNavTab.bookings:
         ComingSoonDialog.show(context);
     }
   }

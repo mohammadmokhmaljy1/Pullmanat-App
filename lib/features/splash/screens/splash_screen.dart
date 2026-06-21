@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../providers/splash_provider.dart';
+import '../../../shared_widgets/status_bar_region.dart';
 import '../widgets/splash_logo.dart';
 
 /// الشاشة الأولى — عرض الشعار فقط (Splash Screen)
@@ -33,10 +34,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.splashBackground,
-      body: Center(
-        child: SplashLogo(),
+    return StatusBarRegion.darkTop(
+      child: const Scaffold(
+        backgroundColor: AppColors.splashBackground,
+        body: Center(
+          child: SplashLogo(),
+        ),
       ),
     );
   }

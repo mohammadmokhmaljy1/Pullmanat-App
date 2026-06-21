@@ -1,26 +1,42 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../core/network/api_exception.dart';
+import '../../../core/storage/auth_session_storage.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 
-/// مزود المصادقة — يدير حالة المستخدم وعمليات login/register
+/// مزود المصادقة — يدير حالة المستخدم والجلسة المحلية
 class AuthProvider extends ChangeNotifier {
-  AuthProvider({AuthService? authService})
-      : _authService = authService ?? AuthService();
+  AuthProvider({
+    AuthService? authService,
+    AuthSessionStorage? sessionStorage,
+  })  : _authService = authService ?? AuthService(),
+        _sessionStorage = sessionStorage ?? AuthSessionStorage();
 
   final AuthService _authService;
+  final AuthSessionStorage _sessionStorage;
 
   UserModel? _currentUser;
   bool _isLoading = false;
+  bool _isInitialized = false;
   String? _errorMessage;
 
   UserModel? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
+  bool get isInitialized => _isInitialized;
   String? get errorMessage => _errorMessage;
-  bool get isAuthenticated => _currentUser != null;
 
-  /// تسجيل الدخول
+  /// هل المستخدم مسجل دخول؟ — يعتمد على بيانات الجلسة المحفوظة
+  bool get isAuthenticated => _currentUser != null && _currentUser!.userId > 0;
+
+  /// تحميل الجلسة من SharedPreferences عند بدء التطبيق
+  Future<void> initializeSession() async {
+    _currentUser = await _sessionStorage.loadUser();
+    _isInitialized = true;
+    notifyListeners();
+  }
+
+  /// تسجيل الدخول وحفظ الجلسة محلياً
   Future<bool> login({
     required String identifier,
     required String password,
@@ -29,10 +45,12 @@ class AuthProvider extends ChangeNotifier {
     _errorMessage = null;
 
     try {
-      _currentUser = await _authService.login(
+      final user = await _authService.login(
         identifier: identifier,
         password: password,
       );
+      _currentUser = user;
+      await _sessionStorage.saveUser(user);
       notifyListeners();
       return true;
     } on ApiException catch (error) {
@@ -44,7 +62,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  /// إنشاء حساب جديد
+  /// إنشاء حساب وحفظ الجلسة محلياً
   Future<bool> register({
     required String name,
     required String email,
@@ -55,12 +73,14 @@ class AuthProvider extends ChangeNotifier {
     _errorMessage = null;
 
     try {
-      _currentUser = await _authService.register(
+      final user = await _authService.register(
         name: name,
         email: email,
         phone: phone,
         password: password,
       );
+      _currentUser = user;
+      await _sessionStorage.saveUser(user);
       notifyListeners();
       return true;
     } on ApiException catch (error) {
@@ -77,8 +97,17 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() {
+  /// تسجيل الخروج ومسح الجلسة المحلية
+  Future<void> logout() async {
     _currentUser = null;
+    await _sessionStorage.clear();
+    notifyListeners();
+  }
+
+  /// مزامنة بيانات المستخدم بعد التحديث أو الجلب من الـ API
+  Future<void> syncUser(UserModel user) async {
+    _currentUser = user;
+    await _sessionStorage.saveUser(user);
     notifyListeners();
   }
 

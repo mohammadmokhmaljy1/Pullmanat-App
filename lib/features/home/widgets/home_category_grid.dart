@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../core/routing/app_routes.dart';
 import '../../../shared_widgets/coming_soon_dialog.dart';
 import 'home_category_card.dart';
 
@@ -22,7 +24,7 @@ class HomeCategoryGrid extends StatelessWidget {
           HomeCategoryCard(
             icon: Icons.directions_bus_outlined,
             label: 'رحلات مخصصة',
-            onTap: () => ComingSoonDialog.show(context),
+            onTap: () => context.push(AppRoutes.customTrip),
           ),
           HomeCategoryCard(
             icon: Icons.confirmation_number_outlined,
@@ -37,7 +39,7 @@ class HomeCategoryGrid extends StatelessWidget {
           HomeCategoryCard(
             icon: Icons.business_outlined,
             label: 'شركات متعددة',
-            onTap: () => ComingSoonDialog.show(context),
+            onTap: () => context.push(AppRoutes.companies),
           ),
         ],
       ),

@@ -2,8 +2,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/screens/sign_in_screen.dart';
 import '../../features/auth/screens/sign_up_screen.dart';
+import '../../features/companies/screens/companies_screen.dart';
+import '../../features/custom_trip/screens/custom_trip_screen.dart';
 import '../../features/home/screens/home_screen.dart';
 import '../../features/onboarding/screens/getting_started_screen.dart';
+import '../../features/profile/screens/profile_content_screen.dart';
+import '../../features/profile/screens/profile_screen.dart';
+import '../../features/profile/data/profile_legal_content.dart';
 import '../../features/search/screens/flight_list_screen.dart';
 import '../../features/search/screens/search_screen.dart';
 import '../../features/splash/screens/splash_loading_screen.dart';
@@ -48,6 +53,36 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.flightList,
         builder: (context, state) => const FlightListScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.companies,
+        builder: (context, state) => const CompaniesScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.customTrip,
+        builder: (context, state) => const CustomTripScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.profileHelp,
+        builder: (context, state) => const ProfileContentScreen(
+          page: ProfileLegalContent.help,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.profilePrivacy,
+        builder: (context, state) => const ProfileContentScreen(
+          page: ProfileLegalContent.privacy,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.profileTerms,
+        builder: (context, state) => const ProfileContentScreen(
+          page: ProfileLegalContent.terms,
+        ),
       ),
     ],
   );

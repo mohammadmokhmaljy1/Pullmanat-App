@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared_widgets/app_bottom_nav_bar.dart';
 import '../../../shared_widgets/app_nav_tab.dart';
+import '../../../shared_widgets/status_bar_region.dart';
 import '../providers/home_provider.dart';
 import '../widgets/home_category_grid.dart';
 import '../widgets/home_header.dart';
@@ -32,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
+      child: StatusBarRegion.lightTop(
+        child: Scaffold(
         backgroundColor: AppColors.homeBackground,
         body: SafeArea(
           child: Column(
@@ -62,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         bottomNavigationBar: const AppBottomNavBar(
           activeTab: AppNavTab.home,
+        ),
         ),
       ),
     );

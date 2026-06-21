@@ -41,7 +41,6 @@ class SearchProvider extends ChangeNotifier {
   bool get isLoadingPoints => _isLoadingPoints;
   String? get errorMessage => _errorMessage;
 
-  /// هل النموذج جاهز للبحث؟
   bool get canSearch =>
       _fromCity != null &&
       _toCity != null &&
@@ -49,7 +48,6 @@ class SearchProvider extends ChangeNotifier {
       _tripDate != null &&
       !_isSearching;
 
-  /// تحديد مدينة الانطلاق وتحميل نقاط الانطلاق
   Future<void> setFromCity(String city) async {
     _fromCity = city;
     _departurePoint = null;
@@ -80,39 +78,66 @@ class SearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// تنفيذ البحث عبر الـ API
-  Future<bool> searchTrips() async {
+  /// تنفيذ البحث — يتطلب user_id من الجلسة المحلية
+  Future<bool> searchTrips({required int? userId}) async {
     if (!canSearch) return false;
+
+    if (userId == null || userId <= 0) {
+      _errorMessage = 'يجب تسجيل الدخول للبحث عن رحلات';
+      notifyListeners();
+      return false;
+    }
 
     _isSearching = true;
     _errorMessage = null;
     notifyListeners();
 
+    final apiDeparture = SyrianCities.toApiName(_fromCity!);
+    final apiDestination = SyrianCities.toApiName(_toCity!);
+    final apiDate = _formatDateForApi(_tripDate!);
+
     try {
       final results = await _tripsService.searchTrips(
-        departureCity: SyrianCities.toApiName(_fromCity!),
-        destinationCity: SyrianCities.toApiName(_toCity!),
-        tripDate: _formatDateForApi(_tripDate!),
+        userId: userId,
+        departureCity: apiDeparture,
+        destinationCity: apiDestination,
+        tripDate: apiDate,
       );
 
-      // تصفية حسب نقطة الانطلاق إذا توفر point_id
-      _searchResults = results.where((trip) {
-        if (_departurePoint == null || _departurePoint!.stationId == 0) {
-          return true;
-        }
-        if (trip.pointId == null) return true;
-        return trip.pointId == _departurePoint!.stationId;
-      }).toList();
-
+      _searchResults = _filterByDeparturePoint(results);
       return true;
-    } on ApiException catch (error) {
-      _errorMessage = error.message;
-      _searchResults = [];
-      return false;
+    } on ApiException {
+      // احتياط: تصفية محلية من trips/view.php
+      try {
+        final allTrips = await _tripsService.fetchAllTrips();
+        _searchResults = _filterByDeparturePoint(
+          _tripsService.filterTripsLocally(
+            trips: allTrips,
+            departureCity: apiDeparture,
+            destinationCity: apiDestination,
+            tripDate: apiDate,
+          ),
+        );
+        return true;
+      } on ApiException catch (fallbackError) {
+        _errorMessage = fallbackError.message;
+        _searchResults = [];
+        return false;
+      }
     } finally {
       _isSearching = false;
       notifyListeners();
     }
+  }
+
+  List<TripModel> _filterByDeparturePoint(List<TripModel> results) {
+    return results.where((trip) {
+      if (_departurePoint == null || _departurePoint!.stationId == 0) {
+        return true;
+      }
+      if (trip.pointId == null) return true;
+      return trip.pointId == _departurePoint!.stationId;
+    }).toList();
   }
 
   String _formatDateForApi(DateTime date) {

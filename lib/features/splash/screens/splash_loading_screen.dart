@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../providers/splash_provider.dart';
+import '../../../shared_widgets/status_bar_region.dart';
 import '../widgets/splash_loading_indicator.dart';
 import '../widgets/splash_logo.dart';
 
@@ -23,35 +24,35 @@ class _SplashLoadingScreenState extends State<SplashLoadingScreen> {
     _startInitialization();
   }
 
-  /// بدء تهيئة التطبيق ثم الانتقال للشاشة الرئيسية
+  /// بدء التهيئة ثم التوجيه حسب الجلسة وحالة التعريف
   Future<void> _startInitialization() async {
     final splashProvider = context.read<SplashProvider>();
-    await splashProvider.initializeApp();
+    final authProvider = context.read<AuthProvider>();
 
-    if (!mounted) return;
+    final nextRoute = await splashProvider.resolveStartupRoute(
+      isAuthenticated: authProvider.isAuthenticated,
+    );
 
-    // بعد اكتمال التهيئة ننتقل لشاشات التعريف
-    if (splashProvider.isInitialized) {
-      context.go(AppRoutes.gettingStarted);
-    }
+    if (!mounted || nextRoute == null) return;
+    context.go(nextRoute);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StatusBarRegion.darkTop(
+      child: Scaffold(
       backgroundColor: AppColors.splashBackground,
       body: Stack(
         children: [
-          // الشعار في منتصف الشاشة
           const Center(
             child: SplashLogo(),
           ),
-          // مؤشر التحميل في الثلث السفلي كما في التصميم
           const Align(
             alignment: Alignment(0, 0.65),
             child: SplashLoadingIndicator(),
           ),
         ],
+      ),
       ),
     );
   }

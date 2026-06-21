@@ -15,7 +15,10 @@ class DioClient {
       baseUrl: ApiEndpoints.baseUrl,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
     ),
   )..interceptors.add(
       LogInterceptor(
@@ -45,7 +48,8 @@ class DioClient {
     }
 
     if (response != null) {
-      final statusMessage = ErrorMessageTranslator.fromStatusCode(response.statusCode);
+      final statusMessage =
+          ErrorMessageTranslator.fromStatusCode(response.statusCode);
       if (statusMessage != null) {
         return ApiException(statusMessage, statusCode: response.statusCode);
       }

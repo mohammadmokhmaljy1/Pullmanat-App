@@ -21,27 +21,57 @@ class TripsService {
     }
   }
 
-  /// البحث عن رحلات — GET /trips/index.php
+  /// البحث عن رحلات — POST /trips/index.php مع user_id في body
   Future<List<TripModel>> searchTrips({
-    String? departureCity,
-    String? destinationCity,
-    String? tripDate,
+    required int userId,
+    required String departureCity,
+    required String destinationCity,
+    required String tripDate,
   }) async {
+    final body = {
+      'user_id': userId,
+      'departure_city': departureCity,
+      'destination_city': destinationCity,
+      'trip_date': tripDate,
+    };
+
     try {
-      final response = await _dio.get(
-        ApiEndpoints.tripsSearch,
-        data: {
-          if (departureCity != null && departureCity.isNotEmpty)
-            'departure_city': departureCity,
-          if (destinationCity != null && destinationCity.isNotEmpty)
-            'destination_city': destinationCity,
-          if (tripDate != null && tripDate.isNotEmpty) 'trip_date': tripDate,
-        },
-      );
+      // POST — متوافق مع PHP API ولا يُحجب من CDN
+      final response = await _dio.post(ApiEndpoints.tripsSearch, data: body);
       return _parseTripsList(response.data);
     } on DioException catch (error) {
+      // احتياط: GET مع query parameters
+      if (error.response?.statusCode == 403 ||
+          error.response?.statusCode == 405) {
+        try {
+          final response = await _dio.get(
+            ApiEndpoints.tripsSearch,
+            queryParameters: body,
+          );
+          return _parseTripsList(response.data);
+        } on DioException catch (fallbackError) {
+          throw DioClient.instance.handleError(fallbackError);
+        }
+      }
       throw DioClient.instance.handleError(error);
     }
+  }
+
+  /// تصفية الرحلات محلياً — احتياط عند فشل API البحث
+  List<TripModel> filterTripsLocally({
+    required List<TripModel> trips,
+    required String departureCity,
+    required String destinationCity,
+    required String tripDate,
+  }) {
+    return trips.where((trip) {
+      final matchesDeparture =
+          trip.departureCity.toLowerCase() == departureCity.toLowerCase();
+      final matchesDestination =
+          trip.destinationCity.toLowerCase() == destinationCity.toLowerCase();
+      final matchesDate = trip.tripDate.startsWith(tripDate);
+      return matchesDeparture && matchesDestination && matchesDate;
+    }).toList();
   }
 
   /// استخراج قائمة الرحلات من استجابة الـ API بمرونة

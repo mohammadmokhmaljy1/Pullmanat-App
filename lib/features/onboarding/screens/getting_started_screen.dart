@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../providers/onboarding_provider.dart';
+import '../../../shared_widgets/status_bar_region.dart';
 import '../widgets/onboarding_bottom_bar.dart';
 import '../widgets/onboarding_page_content.dart';
 import '../widgets/onboarding_top_bar.dart';
@@ -61,12 +62,16 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
   }
 
   /// تخطي التعريف والانتقال لتسجيل الدخول
-  void _handleSkip() {
+  Future<void> _handleSkip() async {
+    await context.read<OnboardingProvider>().markOnboardingCompleted();
+    if (!mounted) return;
     context.go(AppRoutes.signIn);
   }
 
   /// إنهاء التعريف من الصفحة الأخيرة
-  void _handleStart() {
+  Future<void> _handleStart() async {
+    await context.read<OnboardingProvider>().markOnboardingCompleted();
+    if (!mounted) return;
     context.go(AppRoutes.signIn);
   }
 
@@ -74,7 +79,8 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
   Widget build(BuildContext context) {
     final onboarding = context.watch<OnboardingProvider>();
 
-    return Scaffold(
+    return StatusBarRegion.darkTop(
+      child: Scaffold(
       backgroundColor: AppColors.onboardingBackground,
       body: SafeArea(
         child: Column(
@@ -102,6 +108,7 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
