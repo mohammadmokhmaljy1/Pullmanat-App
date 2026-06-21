@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/screens/sign_in_screen.dart';
 import '../../features/auth/screens/sign_up_screen.dart';
+import '../../features/bookings/screens/my_bookings_screen.dart';
 import '../../features/companies/screens/companies_screen.dart';
 import '../../features/custom_trip/screens/custom_trip_screen.dart';
 import '../../features/home/screens/home_screen.dart';
@@ -61,6 +62,10 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.customTrip,
         builder: (context, state) => const CustomTripScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.bookings,
+        builder: (context, state) => const MyBookingsScreen(),
       ),
       GoRoute(
         path: AppRoutes.profile,

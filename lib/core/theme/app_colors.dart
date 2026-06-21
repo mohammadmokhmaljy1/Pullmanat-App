@@ -66,4 +66,13 @@ class AppColors {
 
   /// لون شارة التحقق على صورة الملف الشخصي
   static const Color profileVerifiedBadge = Color(0xFF43A047);
+
+  /// لون حالة الحجز — قادمة
+  static const Color bookingUpcoming = Color(0xFFF5A623);
+
+  /// لون حالة الحجز — مكتملة
+  static const Color bookingCompleted = Color(0xFF43A047);
+
+  /// لون حالة الحجز — ملغاة
+  static const Color bookingCancelled = Color(0xFFE53935);
 }

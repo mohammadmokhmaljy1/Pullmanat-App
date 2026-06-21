@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../core/routing/app_routes.dart';
 import '../core/theme/app_colors.dart';
 import 'app_nav_tab.dart';
-import 'coming_soon_dialog.dart';
 
 /// شريط التنقل السفلي المشترك — ترتيب RTL
 class AppBottomNavBar extends StatelessWidget {
@@ -30,10 +29,10 @@ class AppBottomNavBar extends StatelessWidget {
         context.go(AppRoutes.home);
       case AppNavTab.search:
         context.go(AppRoutes.search);
+      case AppNavTab.bookings:
+        context.go(AppRoutes.bookings);
       case AppNavTab.profile:
         context.go(AppRoutes.profile);
-      case AppNavTab.bookings:
-        ComingSoonDialog.show(context);
     }
   }
 
