@@ -12,6 +12,7 @@ class BookingModel {
     this.seat,
     this.resTime,
     this.notes,
+    this.nationalId,
     this.trip,
   });
 
@@ -22,6 +23,7 @@ class BookingModel {
   final int? seat;
   final String? resTime;
   final String? notes;
+  final int? nationalId;
   final TripModel? trip;
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class BookingModel {
       seat: _parseOptionalInt(json['seat']),
       resTime: json['res_time']?.toString(),
       notes: json['nods']?.toString(),
+      nationalId: _parseOptionalInt(json['national_id']),
       trip: trip,
     );
   }
@@ -54,6 +57,7 @@ class BookingModel {
       seat: seat,
       resTime: resTime,
       notes: notes,
+      nationalId: nationalId,
       trip: tripData,
     );
   }

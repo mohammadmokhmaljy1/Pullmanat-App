@@ -10,10 +10,12 @@ class ProfileHeroSection extends StatelessWidget {
     super.key,
     required this.user,
     required this.onEditPressed,
+    required this.onLogout,
   });
 
   final UserModel user;
   final VoidCallback onEditPressed;
+  final VoidCallback onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +26,16 @@ class ProfileHeroSection extends StatelessWidget {
           clipBehavior: Clip.none,
           alignment: Alignment.bottomCenter,
           children: [
-            const _ProfileHeaderBackground(),
+            _ProfileHeaderBackground(onLogout: onLogout),
             // نصف الصورة فوق خط الرأس ونصفها تحته — كما في Figma
-            Positioned(
-              bottom: -48,
-              child: const ProfileAvatar(),
-            ),
+            Positioned(bottom: -48, child: const ProfileAvatar()),
           ],
         ),
         // مساحة لنصف الصورة السفلي
         const SizedBox(height: 48),
         Transform.translate(
           offset: const Offset(0, -24),
-          child: ProfileInfoCard(
-            user: user,
-            onEditPressed: onEditPressed,
-          ),
+          child: ProfileInfoCard(user: user, onEditPressed: onEditPressed),
         ),
         const SizedBox(height: 8),
       ],
@@ -47,9 +43,11 @@ class ProfileHeroSection extends StatelessWidget {
   }
 }
 
-/// خلفية الرأس الداكنة — مع SafeArea لتجنب تداخل شريط الحالة
+/// خلفية الرأس الداكنة — مع SafeArea وزر تسجيل الخروج
 class _ProfileHeaderBackground extends StatelessWidget {
-  const _ProfileHeaderBackground();
+  const _ProfileHeaderBackground({required this.onLogout});
+
+  final VoidCallback onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +60,24 @@ class _ProfileHeaderBackground extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: Image.asset(
-                  'assets/images/logo_light.png',
-                  height: 40,
-                  fit: BoxFit.contain,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset(
+                    'assets/images/logo_light.png',
+                    height: 40,
+                    fit: BoxFit.contain,
+                  ),
+                  IconButton(
+                    onPressed: onLogout,
+                    tooltip: 'تسجيل الخروج',
+                    icon: const Icon(
+                      Icons.logout_rounded,
+                      color: AppColors.white,
+                      size: 24,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
               const Text(

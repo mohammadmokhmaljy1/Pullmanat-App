@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/screens/sign_in_screen.dart';
@@ -10,6 +11,8 @@ import '../../features/onboarding/screens/getting_started_screen.dart';
 import '../../features/profile/screens/profile_content_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/profile/data/profile_legal_content.dart';
+import '../../features/trip_details/models/trip_details_args.dart';
+import '../../features/trip_details/screens/trip_details_screen.dart';
 import '../../features/search/screens/flight_list_screen.dart';
 import '../../features/search/screens/search_screen.dart';
 import '../../features/splash/screens/splash_loading_screen.dart';
@@ -66,6 +69,18 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.bookings,
         builder: (context, state) => const MyBookingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.tripDetails,
+        builder: (context, state) {
+          final args = state.extra as TripDetailsArgs?;
+          if (args == null) {
+            return const Scaffold(
+              body: Center(child: Text('بيانات الرحلة غير متوفرة')),
+            );
+          }
+          return TripDetailsScreen(args: args);
+        },
       ),
       GoRoute(
         path: AppRoutes.profile,

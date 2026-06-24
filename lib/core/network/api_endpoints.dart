@@ -17,4 +17,7 @@ class ApiEndpoints {
   static const String companiesList = '/company/index.php';
   static const String specialRequestsCreate = '/special_requests/index.php';
   static const String reservationsByUser = '/reservations/index.php';
+  static const String reservationsAdd = '/reservations/add.php';
+  static const String reservationsUpdate = '/reservations/update.php';
+  static const String reservationsCancel = '/reservations/status.php';
 }

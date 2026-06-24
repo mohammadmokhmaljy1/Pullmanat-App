@@ -96,4 +96,82 @@ class BookingsService {
 
     throw ApiException('استجابة غير متوقعة من الخادم');
   }
+
+  /// إنشاء حجز — POST /reservations/add.php
+  Future<void> addReservation({
+    required int userId,
+    required int tripId,
+    required String resTime,
+    required int seat,
+    required int nationalId,
+    String notes = '',
+  }) async {
+    try {
+      await _dio.post(
+        ApiEndpoints.reservationsAdd,
+        data: {
+          'user_id': userId,
+          'trip_id': tripId,
+          'res_time': resTime,
+          'res_status': 'active',
+          'seat': seat,
+          'national_id': nationalId,
+          'nods': notes,
+        },
+      );
+    } on DioException catch (error) {
+      throw DioClient.instance.handleError(error);
+    }
+  }
+
+  /// تحديث حجز — PUT /reservations/update.php
+  Future<void> updateReservation({
+    required int resId,
+    required int userId,
+    required int tripId,
+    required String resTime,
+    required int seat,
+    required int nationalId,
+    String notes = '',
+  }) async {
+    final body = {
+      'res_id': resId,
+      'user_id': userId,
+      'trip_id': tripId,
+      'res_time': resTime,
+      'res_status': 'active',
+      'seat': seat,
+      'national_id': nationalId,
+      'nods': notes,
+    };
+
+    try {
+      await _dio.put(ApiEndpoints.reservationsUpdate, data: body);
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 405) {
+        await _dio.post(ApiEndpoints.reservationsUpdate, data: body);
+        return;
+      }
+      throw DioClient.instance.handleError(error);
+    }
+  }
+
+  /// إلغاء حجز — PUT /reservations/status.php
+  Future<void> cancelReservation({required int resId}) async {
+    try {
+      await _dio.put(
+        ApiEndpoints.reservationsCancel,
+        data: {'res_id': resId},
+      );
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 405) {
+        await _dio.post(
+          ApiEndpoints.reservationsCancel,
+          data: {'res_id': resId},
+        );
+        return;
+      }
+      throw DioClient.instance.handleError(error);
+    }
+  }
 }

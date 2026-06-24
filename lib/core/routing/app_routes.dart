@@ -13,6 +13,7 @@ class AppRoutes {
   static const String companies = '/companies';
   static const String customTrip = '/custom-trip';
   static const String bookings = '/bookings';
+  static const String tripDetails = '/trip-details';
   static const String profile = '/profile';
   static const String profileHelp = '/profile/help';
   static const String profilePrivacy = '/profile/privacy';

@@ -5,6 +5,7 @@ import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/bookings/providers/bookings_provider.dart';
+import 'features/trip_details/providers/trip_details_provider.dart';
 import 'features/companies/providers/companies_provider.dart';
 import 'features/custom_trip/providers/custom_trip_provider.dart';
 import 'features/home/providers/home_provider.dart';
@@ -39,6 +40,7 @@ class PullmanatApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CompaniesProvider()),
         ChangeNotifierProvider(create: (_) => CustomTripProvider()),
         ChangeNotifierProvider(create: (_) => BookingsProvider()),
+        ChangeNotifierProvider(create: (_) => TripDetailsProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],

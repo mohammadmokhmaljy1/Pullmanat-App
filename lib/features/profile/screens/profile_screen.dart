@@ -11,6 +11,7 @@ import '../../../shared_widgets/status_bar_region.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/edit_profile_dialog.dart';
 import '../widgets/profile_hero_section.dart';
+import '../widgets/profile_logout_button.dart';
 import '../widgets/profile_menu_list.dart';
 import '../widgets/profile_quick_actions.dart';
 
@@ -54,6 +55,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
           : user;
       await auth.syncUser(merged);
     }
+  }
+
+  bool _isLoggingOut = false;
+
+  /// تسجيل الخروج ومسح الجلسة ثم التوجيه لشاشة الدخول
+  Future<void> _handleLogout() async {
+    if (_isLoggingOut) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: const Text('تسجيل الخروج'),
+          content: const Text('هل تريد تسجيل الخروج من حسابك؟'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('إلغاء'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text(
+                'خروج',
+                style: TextStyle(color: AppColors.bookingCancelled),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isLoggingOut = true);
+    await context.read<AuthProvider>().logout();
+    if (!mounted) return;
+    context.go(AppRoutes.signIn);
   }
 
   void _openEditDialog() {
@@ -110,10 +149,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: ProfileHeroSection(
                       user: user,
                       onEditPressed: _openEditDialog,
+                      onLogout: _handleLogout,
                     ),
                   ),
                   const SliverToBoxAdapter(child: ProfileQuickActions()),
                   const SliverToBoxAdapter(child: ProfileMenuList()),
+                  SliverToBoxAdapter(
+                    child: ProfileLogoutButton(
+                      isLoading: _isLoggingOut,
+                      onPressed: _handleLogout,
+                    ),
+                  ),
                   const SliverToBoxAdapter(child: SizedBox(height: 24)),
                 ],
               ),

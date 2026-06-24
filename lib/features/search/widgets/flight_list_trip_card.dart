@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../shared_widgets/coming_soon_dialog.dart';
+import '../../../features/trip_details/models/trip_details_args.dart';
+import '../../../features/trip_details/screens/trip_details_screen.dart';
 import '../../home/models/trip_model.dart';
 
 /// بطاقة رحلة في قائمة نتائج البحث — Flight list.png
@@ -71,7 +72,10 @@ class FlightListTripCard extends StatelessWidget {
               color: AppColors.homeDetailsButton,
               borderRadius: BorderRadius.circular(20),
               child: InkWell(
-                onTap: () => ComingSoonDialog.show(context),
+                onTap: () => openTripDetails(
+                  context,
+                  TripDetailsArgs(trip: trip),
+                ),
                 borderRadius: BorderRadius.circular(20),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
